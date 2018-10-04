@@ -1,15 +1,41 @@
 import React, {Component} from 'react';
-import {AppRegistry, Text, View, StyleSheet} from 'react-native';
+import {AppRegistry, Text, View, StyleSheet, TouchableHighlight} from 'react-native';
 
 export default class Component2 extends Component{
+
+  async componentDidMount() {
+    const URL = 'http://localhost:3000/scan';
+    await fetch(
+      URL, 
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: 5
+        })
+      }
+    ) 
+    .then(response => {
+      response.json()
+      .then(json => {
+        console.log(json)
+      })
+    })
+    .catch(err => console.log(err));
+  }
+
   render(){
     return(
       <View>
         <Text style={styles.myText}>I Live Again</Text>
         <View style={styles.container}>
-          <View style={styles.v1}>
-            <Text>Yay</Text>
-          </View>
+          <TouchableHighlight onPress={this.handlePress}>
+            <View style={styles.v1}>
+              <Text>Yay</Text>
+            </View>
+          </TouchableHighlight> 
           <View style={styles.v2}>
             <Text>Yay</Text>
           </View>
