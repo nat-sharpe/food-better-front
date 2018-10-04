@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {AppRegistry, Text, View} from 'react-native';
 
-import Component1 from './screens/Component1';
+import Component2 from './screens/Component2';
 
 export default class foodbetter extends Component{
   render(){
     return(
       <View>
         <Text>Hi </Text>
-        <Component1 message={"The days have gone down in the West"}/>
+        <Component2 />
       </View>
     )
   }
