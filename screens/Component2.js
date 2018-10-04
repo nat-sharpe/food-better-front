@@ -1,10 +1,20 @@
 import React, {Component} from 'react';
-import {AppRegistry, Text, View, StyleSheet, TouchableHighlight} from 'react-native';
+import {AppRegistry, Text, View, StyleSheet} from 'react-native';
 
 export default class Component2 extends Component{
 
+  constructor(props){
+    super(props);
+    this.state = {
+      item1: 'Scan',
+      item2: 'Scan',
+      item3: 'Scan',
+    }
+  }
+
   async componentDidMount() {
-    const URL = 'http://localhost:3000/scan';
+    const URL = 'http://foodbetter.fun:3000/scan';
+    
     await fetch(
       URL, 
       {
@@ -13,14 +23,17 @@ export default class Component2 extends Component{
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          id: 5
+          id: 10
         })
       }
     ) 
     .then(response => {
       response.json()
-      .then(json => {
-        console.log(json)
+      .then(data => {
+        console.log(data.status)
+        let status = data.status ? 'Good to Eat' : 'Poison';
+        console.log(status)
+        this.setState({item1: status});
       })
     })
     .catch(err => console.log(err));
@@ -29,18 +42,16 @@ export default class Component2 extends Component{
   render(){
     return(
       <View>
-        <Text style={styles.myText}>I Live Again</Text>
+        <Text style={styles.myText}>Food Better</Text>
         <View style={styles.container}>
-          <TouchableHighlight onPress={this.handlePress}>
-            <View style={styles.v1}>
-              <Text>Yay</Text>
-            </View>
-          </TouchableHighlight> 
+          <View style={styles.v1}>
+            <Text>{this.state.item1}</Text>
+          </View>
           <View style={styles.v2}>
-            <Text>Yay</Text>
+            <Text style={styles.vText}>{this.state.item2}</Text>
           </View>
           <View style={styles.v3}>
-            <Text style={styles.vText}>Yay</Text>
+            <Text style={styles.vText}>{this.state.item3}</Text>
           </View>
         </View>
       </View>
@@ -59,12 +70,12 @@ const styles = StyleSheet.create({
   },
   v1: {
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: '#009900',
     padding: 10
   },
   v2: {
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: 'black',
     padding: 10
   },
   v3: {
@@ -76,4 +87,5 @@ const styles = StyleSheet.create({
     color: 'white'
   }
 })
+
 AppRegistry.registerComponent('Component2', () => Component2);
