@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppRegistry, Text, View, StyleSheet} from 'react-native';
+import {AppRegistry, Text, View, StyleSheet, TouchableHighlight} from 'react-native';
 
 export default class Component2 extends Component{
 
@@ -12,10 +12,10 @@ export default class Component2 extends Component{
     }
   }
 
-  async componentDidMount() {
+  pressHandler = () => {
     const URL = 'http://foodbetter.fun:3000/scan';
     
-    await fetch(
+    fetch(
       URL, 
       {
         method: 'POST',
@@ -23,7 +23,7 @@ export default class Component2 extends Component{
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          id: 10
+          id: 6
         })
       }
     ) 
@@ -44,9 +44,11 @@ export default class Component2 extends Component{
       <View>
         <Text style={styles.myText}>Food Better</Text>
         <View style={styles.container}>
-          <View style={styles.v1}>
-            <Text>{this.state.item1}</Text>
-          </View>
+          <TouchableHighlight onPress={this.pressHandler}>
+            <View style={styles.v1}>
+              <Text>{this.state.item1}</Text>
+            </View>
+          </TouchableHighlight>
           <View style={styles.v2}>
             <Text style={styles.vText}>{this.state.item2}</Text>
           </View>
