@@ -8,9 +8,11 @@ export default class App extends Component {
     super(props);
     this.state = {
       hasCameraPermission: null,
-      item1: {id: '9', message: 'Scan'},
-      item2: {id: '4', message: 'Scan'},
-      item3: {id: '7', message: 'Scan'},
+      currentScans: [
+        {id: '0', message: '1'},
+        {id: '0', message: '2'},
+        {id: '0', message: '3'},
+      ]
     }
   }
 
@@ -25,12 +27,63 @@ export default class App extends Component {
     });
   };
 
-  _handleBarCodeRead = data => {
-    Alert.alert(
-      'Scan successful!',
-      JSON.stringify(data)
-    );
+  _fetchItemData = code => {
+    const URL = 'http://foodbetter.fun:3000/scan';
+    fetch(
+      URL, 
+      {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: code.data
+        })
+      }
+    ) 
+    .then(response => {
+      response.json()
+      .then(data => {
+        console.log(data.status)
+        let status = data.status ? 'YES' : 'NO';
+        console.log(status)
+        let newScans = [...this.state.currentScans];
+        newScans.splice(0, 1);
+        newScans.push({id: code.data, message: status});
+        this.setState({currentScans: newScans})
+        console.log(this.state.currentScans)
+      })
+    })
+    .catch(err => console.log(err));
   };
+
+  _handleBarCodeRead = code => {
+    let newItem = true;
+    this.state.currentScans.forEach(item => {
+      if (code.data === item.id) {
+        newItem = false
+      }
+    })
+    if (newItem) {this._fetchItemData(code)};
+  }
+
+  buildButtons = (item) => {
+    console.log('yep');
+    let color = 'v1';
+    (item.message === 'YES') ? color = 'v2' : 'v3';
+    return (
+      <TouchableOpacity 
+        style={styles.color} 
+        // onPress={() => this.pressHandler('item1')}
+        >
+        <View>
+          <Text>
+            {item.message}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
 
   render() {
     return (
@@ -48,36 +101,9 @@ export default class App extends Component {
           }
         </View>
         <View style={styles.container}>
-          <TouchableOpacity 
-            style={styles.v1} 
-            onPress={() => this.pressHandler('item1')}
-            >
-            <View>
-              <Text>
-                {this.state.item1.message}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.v1} 
-            onPress={() => this.pressHandler('item2')}
-            >
-            <View>
-              <Text>
-                {this.state.item2.message}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.v1} 
-            onPress={() => this.pressHandler('item3')}
-            >
-            <View>
-              <Text>
-                {this.state.item3.message}
-              </Text>
-            </View>
-          </TouchableOpacity>
+          <View>{this.buildButtons(this.state.currentScans[0])}</View>
+          <View>{this.buildButtons(this.state.currentScans[1])}</View>
+          <View>{this.buildButtons(this.state.currentScans[2])}</View>
         </View>
       </View>
     );
@@ -107,6 +133,20 @@ const styles = StyleSheet.create({
   v1: {
     flex: 1,
     backgroundColor: '#777777',
+    padding: 10,
+    margin: 3,
+    marginTop: 6
+  },
+  v2: {
+    flex: 1,
+    backgroundColor: 'green',
+    padding: 10,
+    margin: 3,
+    marginTop: 6
+  },
+  v3: {
+    flex: 1,
+    backgroundColor: 'red',
     padding: 10,
     margin: 3,
     marginTop: 6
