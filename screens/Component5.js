@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { Constants, BarCodeScanner, Permissions } from 'expo';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Camera, Permissions } from 'expo';
 
 export default class App extends Component {
 
@@ -17,17 +17,17 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this._requestCameraPermission();
+    this.requestCameraPermission();
   }
 
-  _requestCameraPermission = async () => {
+  requestCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({
       hasCameraPermission: status === 'granted',
     });
   };
 
-  _fetchItemData = code => {
+  fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
     fetch(
       URL, 
@@ -57,31 +57,27 @@ export default class App extends Component {
     .catch(err => console.log(err));
   };
 
-  _handleBarCodeRead = code => {
-    let newItem = true;
-    this.state.currentScans.forEach(item => {
-      if (code.data === item.id) {
-        newItem = false
-      }
-    })
-    if (newItem) {this._fetchItemData(code)};
+  handleBarCodeRead = code => {
+    // let newItem = true;
+    // this.state.currentScans.forEach(item => {
+    //   if (code.data === item.id) {
+    //     newItem = false
+    //   }
+    // })
+    // if (newItem) {this.fetchItemData(code)};
+    this.fetchItemData(code)
   }
 
+  
+
   buildButtons = (item) => {
-    console.log('yep');
-    let color = 'v1';
     (item.message === 'YES') ? color = 'v2' : 'v3';
     return (
-      <TouchableOpacity 
-        style={styles.color} 
-        // onPress={() => this.pressHandler('item1')}
-        >
         <View>
-          <Text>
+          <Text style={styles.text1}>
             {item.message}
           </Text>
         </View>
-      </TouchableOpacity>
     )
   }
 
@@ -94,16 +90,23 @@ export default class App extends Component {
             <Text>Requesting for camera permission</Text> :
             this.state.hasCameraPermission === false ?
               <Text>Camera permission is not granted</Text> :
-              <BarCodeScanner
-                onBarCodeRead={this._handleBarCodeRead}
+              <Camera
+                onBarCodeRead={this.handleBarCodeRead}
                 style={styles.scanner}
-              />
+              >
+              </Camera>
           }
         </View>
         <View style={styles.container}>
-          <View>{this.buildButtons(this.state.currentScans[0])}</View>
-          <View>{this.buildButtons(this.state.currentScans[1])}</View>
-          <View>{this.buildButtons(this.state.currentScans[2])}</View>
+          <TouchableOpacity style={styles.v1}>
+            {this.buildButtons(this.state.currentScans[0])}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.v1}>
+            {this.buildButtons(this.state.currentScans[1])}
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.v1}>
+            {this.buildButtons(this.state.currentScans[2])}
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -115,7 +118,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
   },
   scanner: {
@@ -124,7 +126,9 @@ const styles = StyleSheet.create({
   },
   myText: {
     color: 'white',
-    backgroundColor: 'blue'
+    backgroundColor: 'green',
+    fontSize: 30,
+    textAlign: 'center'
   },
   container: {
     flexDirection: 'row',
@@ -132,23 +136,15 @@ const styles = StyleSheet.create({
   },
   v1: {
     flex: 1,
-    backgroundColor: '#777777',
+    backgroundColor: '#222222',
     padding: 10,
     margin: 3,
-    marginTop: 6
+    marginTop: 6,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  v2: {
-    flex: 1,
-    backgroundColor: 'green',
-    padding: 10,
-    margin: 3,
-    marginTop: 6
-  },
-  v3: {
-    flex: 1,
-    backgroundColor: 'red',
-    padding: 10,
-    margin: 3,
-    marginTop: 6
+  text1: {
+    fontSize: 30,
+    color: 'white'
   }
 });
