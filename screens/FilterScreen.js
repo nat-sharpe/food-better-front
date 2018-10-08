@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Button, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
-import t from 'tcomb-form-native'; 
+import t from 'tcomb-form-native';
+import { connect } from "react-redux";
+
 
 const DismissKeyboard = ({children}) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -45,10 +47,8 @@ const formStyles = {
 const options = {
   fields: {
     maxCarbs: {
-      error: 'Without an email address how are you going to reset your password when you forget it?'
     },
     maxCalories: {
-      error: 'Choose something you use on a dozen other sites or something you won\'t remember'
     },
     organic: {
       label: 'Organic',
@@ -63,10 +63,25 @@ const options = {
   stylesheet: formStyles,
 };
 
-export default class FilterScreen extends React.Component {
+class FilterScreen extends React.Component {
+
+  constructor(props) {
+      super(props);
+      this.state = {
+          maxCalories: 0,
+          maxCarbs: 0,
+          organic: false,
+          vegan: false,
+          glutenFree: false
+      };
+    }
+
   handleSubmit = () => {
     const value = this._form.getValue();
-    console.log('value: ', value);
+    this.props.dispatch({
+      type: 'CHANGE_SETTINGS',
+      settings: value
+    });
   }
   
   render() {
@@ -96,3 +111,12 @@ const styles = StyleSheet.create({
   },
 });
 
+// const ConnectFilterScreen = connect(state => ({
+//   AddToMenus: state.reservations
+// }));
+
+// export default ConnectFilterScreen(FilterScreen);
+
+let ConnectedFilterScreen = connect(state => ({ state }))(FilterScreen)
+
+export default ConnectedFilterScreen;
