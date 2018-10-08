@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Camera, Permissions } from 'expo';
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { BarCodeScanner, Permissions } from 'expo';
 
-export default class App extends Component {
+export default class ScannerScreen extends Component {
 
   constructor(props){
     super(props);
@@ -12,7 +12,7 @@ export default class App extends Component {
         {id: '0', message: '1'},
         {id: '0', message: '2'},
         {id: '0', message: '3'},
-      ]
+      ],
     }
   }
 
@@ -44,7 +44,7 @@ export default class App extends Component {
     .then(response => {
       response.json()
       .then(data => {
-        console.log(data.status)
+        console.log(data)
         let status = data.status ? 'YES' : 'NO';
         console.log(status)
         let newScans = [...this.state.currentScans];
@@ -58,17 +58,15 @@ export default class App extends Component {
   };
 
   handleBarCodeRead = code => {
-    // let newItem = true;
-    // this.state.currentScans.forEach(item => {
-    //   if (code.data === item.id) {
-    //     newItem = false
-    //   }
-    // })
-    // if (newItem) {this.fetchItemData(code)};
-    this.fetchItemData(code)
+    let newItem = true;
+    console.log(code)
+    this.state.currentScans.forEach(item => {
+      if (code.data === item.id) {
+        newItem = false
+      }
+    })
+    if (newItem) {this.fetchItemData(code)};
   }
-
-  
 
   buildButtons = (item) => {
     (item.message === 'YES') ? color = 'v2' : 'v3';
@@ -90,11 +88,10 @@ export default class App extends Component {
             <Text>Requesting for camera permission</Text> :
             this.state.hasCameraPermission === false ?
               <Text>Camera permission is not granted</Text> :
-              <Camera
-                onBarCodeRead={this.handleBarCodeRead}
-                style={styles.scanner}
-              >
-              </Camera>
+              <BarCodeScanner
+                onBarCodeScanned={this.handleBarCodeRead}
+                style={styles.preview}
+              />
           }
         </View>
         <View style={styles.container}>
@@ -122,7 +119,7 @@ const styles = StyleSheet.create({
   },
   scanner: {
     height: 200, 
-    width: 300
+    width: Dimensions.get('window').width
   },
   myText: {
     color: 'white',
@@ -146,5 +143,11 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 30,
     color: 'white'
-  }
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    height: Dimensions.get('window').height,
+  },
 });

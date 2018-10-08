@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {AppRegistry, Text, View, StyleSheet} from 'react-native';
 
-import Component5 from './screens/Component5';
+import ScannerScreen from './screens/ScannerScreen';
 
 export default class foodbetter extends Component{
   render(){
     return(
       <View style={styles.container}>
-        <Component5 />
+        <ScannerScreen />
       </View>
     )
   }
