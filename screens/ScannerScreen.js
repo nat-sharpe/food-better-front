@@ -44,14 +44,11 @@ export default class ScannerScreen extends Component {
     .then(response => {
       response.json()
       .then(data => {
-        console.log(data)
         let status = data.status ? 'YES' : 'NO';
-        console.log(status)
         let newScans = [...this.state.currentScans];
         newScans.splice(0, 1);
         newScans.push({id: code.data, message: status});
         this.setState({currentScans: newScans})
-        console.log(this.state.currentScans)
       })
     })
     .catch(err => console.log(err));
@@ -59,7 +56,6 @@ export default class ScannerScreen extends Component {
 
   handleBarCodeRead = code => {
     let newItem = true;
-    console.log(code)
     this.state.currentScans.forEach(item => {
       if (code.data === item.id) {
         newItem = false
