@@ -1,17 +1,25 @@
 import React, {Component} from 'react';
-import {AppRegistry, Text, View} from 'react-native';
+import {AppRegistry, Text, View, StyleSheet} from 'react-native';
 
-import Component2 from './screens/Component2';
+import Component5 from './screens/Component5';
 
 export default class foodbetter extends Component{
   render(){
     return(
-      <View>
-        <Text>Hi </Text>
-        <Component2 />
+      <View style={styles.container}>
+        <Component5 />
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+  }
+});
 
 AppRegistry.registerComponent('Food Better', () => foodbetter);
