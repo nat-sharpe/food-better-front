@@ -9,11 +9,6 @@ class ScannerScreen extends Component {
     super(props);
     this.state = {
       hasCameraPermission: null,
-      // currentScans: [
-      //   {id: '0', message: '1'},
-      //   {id: '0', message: '2'},
-      //   {id: '0', message: '3'},
-      // ],
     }
   }
 
@@ -83,10 +78,16 @@ class ScannerScreen extends Component {
   }
 
   buildButtons = (item) => {
-    let symbol = require('../assets/images/yes.png')
+    let no = require('../assets/images/no.png');
+    let yes = require('../assets/images/yes.png');
+    let status = item.allowed ? yes : no;
     if (item.id) {
       return (
           <View style={styles.button}>
+            <Image
+              source={status}
+              style={{height: 50, width: 50}}
+            />
             <Image
               source={{uri: item.imageURL}}
               style={{height: 50, width: 30}}
@@ -174,7 +175,8 @@ const styles = StyleSheet.create({
   },
   text1: {
     fontSize: 15,
-    color: 'black'
+    color: 'black',
+    width: 200
   },
   preview: {
     flex: 1,
