@@ -56,11 +56,21 @@ class ScannerScreen extends Component {
       }
     ) 
     .then(response => {
-      console.log('Hi')
       response.json()
       .then(data => {
-        console.log('Bling')
-        console.log(data)
+        this.props.dispatch({
+          type: 'UPDATE_ITEM',
+          id: data.id,
+          allowed: data.allowed,
+          name: data.name,
+          brand: data.brand,
+          imageURL: data.imageURL,
+          carbs: data.carbs,
+          calories: data.calories,
+          organic: data.organic,
+          vegan: data.vegan,
+          glutenFree: data.glutenFree,
+        });
         // let status = data.status ? 'YES' : 'NO';
         // let newScans = [...this.state.currentScans];
         // newScans.splice(0, 1);

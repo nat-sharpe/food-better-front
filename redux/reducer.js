@@ -1,15 +1,10 @@
 const reducer = (oldState, action) => {
   if (action.type === 'CHANGE_SETTINGS') {
-    //   console.log('Poo')
-    //   console.log(action)
-    //   console.log(oldState)
-    //   console.log(oldState.settings)
-    //   console.log(action.settings.vegan)
       return {
           ...oldState,
           settings: action.settings
       } 
-  } else if (action.type === 'UPDATE_ITEMS') {
+  } else if (action.type === 'UPDATE_ITEM') {
       let newItem = {
         id: action.id,
         allowed: action.allowed,
@@ -19,12 +14,13 @@ const reducer = (oldState, action) => {
         carbs: action.carbs,
         calories: action.calories,
         organic: action.organic,
-        vegan: naction.vegan,
+        vegan: action.vegan,
         glutenFree: action.glutenFree,
       };
       let newScans = [...oldState.oldScans];
       newScans.splice(0, 1);
       newScans.push(newItem);
+      console.log(newScans)
       return {
           ...oldState,
           oldScans: newScans
