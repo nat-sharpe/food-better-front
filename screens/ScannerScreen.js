@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { connect } from "react-redux";
 import { BarCodeScanner, Permissions } from 'expo';
 
@@ -84,18 +84,24 @@ class ScannerScreen extends Component {
 
   buildButtons = (item) => {
     let symbol = require('../assets/images/yes.png')
-    return (
-        <View>
-          <Text style={styles.text1}>
-            {`${item.brand} ${item.name}`}
-          </Text>
-        </View>
-    )
+    if (item.id) {
+      return (
+          <View style={styles.button}>
+            <Image
+              source={{uri: item.imageURL}}
+              style={{height: 50, width: 30}}
+            />
+            <Text style={styles.text1}>
+              {`${item.brand} ${item.name}`}
+            </Text>
+          </View>
+      )
+    }
   }
 
   render() {
     return (
-      <View>
+      <View style={styles.main}>
         {/* <Text style={styles.myText}>Food Better</Text> */}
         <View style={styles.scanner}>
           {this.state.hasCameraPermission === null ?
@@ -135,12 +141,10 @@ export default connect(mapStateToProps)(ScannerScreen)
 
 
 const styles = StyleSheet.create({
-  scanner: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+  main: {
+    backgroundColor: '#222222'
   },
+
   scanner: {
     height: 200, 
     width: Dimensions.get('window').width
@@ -155,9 +159,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: 250
   },
+  button: {
+    flex: 1,
+    flexDirection: 'row'
+  },
   v1: {
     flex: 1,
-    backgroundColor: '#222222',
+    backgroundColor: 'white',
     padding: 10,
     margin: 3,
     marginTop: 6,
@@ -166,7 +174,7 @@ const styles = StyleSheet.create({
   },
   text1: {
     fontSize: 15,
-    color: 'white'
+    color: 'black'
   },
   preview: {
     flex: 1,
