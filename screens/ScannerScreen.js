@@ -9,11 +9,11 @@ class ScannerScreen extends Component {
     super(props);
     this.state = {
       hasCameraPermission: null,
-      currentScans: [
-        {id: '0', message: '1'},
-        {id: '0', message: '2'},
-        {id: '0', message: '3'},
-      ],
+      // currentScans: [
+      //   {id: '0', message: '1'},
+      //   {id: '0', message: '2'},
+      //   {id: '0', message: '3'},
+      // ],
     }
   }
 
@@ -71,32 +71,22 @@ class ScannerScreen extends Component {
           vegan: data.vegan,
           glutenFree: data.glutenFree,
         });
-        // let status = data.status ? 'YES' : 'NO';
-        // let newScans = [...this.state.currentScans];
-        // newScans.splice(0, 1);
-        // newScans.push({id: code.data, message: status});
-        // this.setState({currentScans: newScans})
       })
     })
     .catch(err => console.log(err));
   };
 
   handleBarCodeRead = code => {
-    let newItem = true;
-    this.state.currentScans.forEach(item => {
-      if (code.data === item.id) {
-        newItem = false
-      }
-    })
-    if (newItem) {this.fetchItemData(code)};
+    if (this.props.oldScans[0].id !== code.data) {
+      this.fetchItemData(code)
+    };
   }
 
   buildButtons = (item) => {
-    (item.message === 'YES') ? color = 'v2' : 'v3';
     return (
         <View>
           <Text style={styles.text1}>
-            {item.message}
+            {`${item.brand} ${item.name}`}
           </Text>
         </View>
     )
@@ -105,7 +95,7 @@ class ScannerScreen extends Component {
   render() {
     return (
       <View>
-        <Text style={styles.myText}>Food Better</Text>
+        {/* <Text style={styles.myText}>Food Better</Text> */}
         <View style={styles.scanner}>
           {this.state.hasCameraPermission === null ?
             <Text>Requesting for camera permission</Text> :
@@ -119,13 +109,13 @@ class ScannerScreen extends Component {
         </View>
         <View style={styles.container}>
           <TouchableOpacity style={styles.v1}>
-            {this.buildButtons(this.state.currentScans[0])}
+            {this.buildButtons(this.props.oldScans[0])}
+         </TouchableOpacity>
+          <TouchableOpacity style={styles.v1}>
+            {this.buildButtons(this.props.oldScans[1])}
           </TouchableOpacity>
           <TouchableOpacity style={styles.v1}>
-            {this.buildButtons(this.state.currentScans[1])}
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.v1}>
-            {this.buildButtons(this.state.currentScans[2])}
+            {this.buildButtons(this.props.oldScans[2])}
           </TouchableOpacity>
         </View>
       </View>
@@ -135,7 +125,8 @@ class ScannerScreen extends Component {
 
 const mapStateToProps = state => { 
   return {
-    settings: state.settings 
+    settings: state.settings,
+    oldScans: state.oldScans  
   } 
 };
 
@@ -160,8 +151,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   container: {
-    flexDirection: 'row',
-    height: 100
+    flexDirection: 'column',
+    height: 250
   },
   v1: {
     flex: 1,
@@ -173,7 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   text1: {
-    fontSize: 30,
+    fontSize: 15,
     color: 'white'
   },
   preview: {
