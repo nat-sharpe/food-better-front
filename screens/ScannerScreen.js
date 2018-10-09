@@ -77,12 +77,13 @@ class ScannerScreen extends Component {
   };
 
   handleBarCodeRead = code => {
-    if (this.props.oldScans[0].id !== code.data) {
+    if (this.props.oldScans[2].id !== code.data) {
       this.fetchItemData(code)
     };
   }
 
   buildButtons = (item) => {
+    let symbol = require('../assets/images/yes.png')
     return (
         <View>
           <Text style={styles.text1}>
@@ -109,13 +110,13 @@ class ScannerScreen extends Component {
         </View>
         <View style={styles.container}>
           <TouchableOpacity style={styles.v1}>
-            {this.buildButtons(this.props.oldScans[0])}
+            {this.buildButtons(this.props.oldScans[2])}
          </TouchableOpacity>
           <TouchableOpacity style={styles.v1}>
             {this.buildButtons(this.props.oldScans[1])}
           </TouchableOpacity>
           <TouchableOpacity style={styles.v1}>
-            {this.buildButtons(this.props.oldScans[2])}
+            {this.buildButtons(this.props.oldScans[0])}
           </TouchableOpacity>
         </View>
       </View>
