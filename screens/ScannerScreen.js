@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Camera, Permissions } from 'expo';
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { connect } from "react-redux";
+import { BarCodeScanner, Permissions } from 'expo';
 
-export default class App extends Component {
+class ScannerScreen extends Component {
 
   constructor(props){
     super(props);
@@ -12,7 +13,7 @@ export default class App extends Component {
         {id: '0', message: '1'},
         {id: '0', message: '2'},
         {id: '0', message: '3'},
-      ]
+      ],
     }
   }
 
@@ -29,6 +30,14 @@ export default class App extends Component {
 
   fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
+    console.log(JSON.stringify({
+      id: code.data,
+      maxCarbs: this.props.settings.maxCarbs,
+      maxCalories: this.props.settings.maxCalories,
+      organic: this.props.settings.organic,
+      vegan: this.props.settings.vegan,
+      glutenFree: this.props.settings.glutenFree
+    }))
     fetch(
       URL, 
       {
@@ -37,38 +46,40 @@ export default class App extends Component {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          id: code.data
+          id: code.data,
+          maxCarbs: this.props.settings.maxCarbs,
+          maxCalories: this.props.settings.maxCalories,
+          organic: this.props.settings.organic,
+          vegan: this.props.settings.vegan,
+          glutenFree: this.props.settings.glutenFree
         })
       }
     ) 
     .then(response => {
+      console.log('Hi')
       response.json()
       .then(data => {
-        console.log(data.status)
-        let status = data.status ? 'YES' : 'NO';
-        console.log(status)
-        let newScans = [...this.state.currentScans];
-        newScans.splice(0, 1);
-        newScans.push({id: code.data, message: status});
-        this.setState({currentScans: newScans})
-        console.log(this.state.currentScans)
+        console.log('Bling')
+        console.log(data)
+        // let status = data.status ? 'YES' : 'NO';
+        // let newScans = [...this.state.currentScans];
+        // newScans.splice(0, 1);
+        // newScans.push({id: code.data, message: status});
+        // this.setState({currentScans: newScans})
       })
     })
     .catch(err => console.log(err));
   };
 
   handleBarCodeRead = code => {
-    // let newItem = true;
-    // this.state.currentScans.forEach(item => {
-    //   if (code.data === item.id) {
-    //     newItem = false
-    //   }
-    // })
-    // if (newItem) {this.fetchItemData(code)};
-    this.fetchItemData(code)
+    let newItem = true;
+    this.state.currentScans.forEach(item => {
+      if (code.data === item.id) {
+        newItem = false
+      }
+    })
+    if (newItem) {this.fetchItemData(code)};
   }
-
-  
 
   buildButtons = (item) => {
     (item.message === 'YES') ? color = 'v2' : 'v3';
@@ -90,11 +101,10 @@ export default class App extends Component {
             <Text>Requesting for camera permission</Text> :
             this.state.hasCameraPermission === false ?
               <Text>Camera permission is not granted</Text> :
-              <Camera
-                onBarCodeRead={this.handleBarCodeRead}
-                style={styles.scanner}
-              >
-              </Camera>
+              <BarCodeScanner
+                onBarCodeScanned={this.handleBarCodeRead}
+                style={styles.preview}
+              />
           }
         </View>
         <View style={styles.container}>
@@ -111,7 +121,16 @@ export default class App extends Component {
       </View>
     );
   }
-}
+};
+
+const mapStateToProps = state => { 
+  return {
+    settings: state.settings 
+  } 
+};
+
+export default connect(mapStateToProps)(ScannerScreen)
+
 
 const styles = StyleSheet.create({
   scanner: {
@@ -122,7 +141,7 @@ const styles = StyleSheet.create({
   },
   scanner: {
     height: 200, 
-    width: 300
+    width: Dimensions.get('window').width
   },
   myText: {
     color: 'white',
@@ -146,5 +165,11 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 30,
     color: 'white'
-  }
+  },
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    height: Dimensions.get('window').height,
+  },
 });
