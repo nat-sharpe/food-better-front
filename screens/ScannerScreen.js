@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { connect } from "react-redux";
 import { BarCodeScanner, Permissions } from 'expo';
 
-export default class ScannerScreen extends Component {
+class ScannerScreen extends Component {
 
   constructor(props){
     super(props);
@@ -29,6 +30,7 @@ export default class ScannerScreen extends Component {
 
   fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
+    console.log(this.props.settings)
     fetch(
       URL, 
       {
@@ -37,7 +39,12 @@ export default class ScannerScreen extends Component {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          id: code.data
+          id: code.data,
+          maxCarbs: this.props.settings.maxCarbs,
+          maxCalories: this.props.settings.maxCalories,
+          organic: this.props.settings.organic,
+          vegan: this.props.settings.vegan,
+          glutenFree: this.props.settings.glutenFree,
         })
       }
     ) 
@@ -104,7 +111,16 @@ export default class ScannerScreen extends Component {
       </View>
     );
   }
-}
+};
+
+const mapStateToProps = state => { 
+  return {
+    settings: state.settings 
+  } 
+};
+
+export default connect(mapStateToProps)(ScannerScreen)
+
 
 const styles = StyleSheet.create({
   scanner: {

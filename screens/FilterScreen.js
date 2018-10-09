@@ -78,6 +78,7 @@ class FilterScreen extends React.Component {
 
   handleSubmit = () => {
     const value = this._form.getValue();
+    console.log(this.props)
     this.props.dispatch({
       type: 'CHANGE_SETTINGS',
       settings: value
@@ -103,6 +104,8 @@ class FilterScreen extends React.Component {
   }
 }
 
+export default connect()(FilterScreen)
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -110,13 +113,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 });
-
-// const ConnectFilterScreen = connect(state => ({
-//   AddToMenus: state.reservations
-// }));
-
-// export default ConnectFilterScreen(FilterScreen);
-
-let ConnectedFilterScreen = connect(state => ({ state }))(FilterScreen)
-
-export default ConnectedFilterScreen;

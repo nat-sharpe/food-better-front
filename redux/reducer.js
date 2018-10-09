@@ -1,9 +1,10 @@
 const reducer = (oldState, action) => {
   if (action.type === 'CHANGE_SETTINGS') {
-      console.log('Poo')
-      console.log(oldState)
-      console.log(oldState.settings)
-      console.log(action.settings)
+    //   console.log('Poo')
+    //   console.log(action)
+    //   console.log(oldState)
+    //   console.log(oldState.settings)
+    //   console.log(action.settings.vegan)
       return {
           ...oldState,
           settings: action.settings
@@ -29,6 +30,7 @@ const reducer = (oldState, action) => {
           oldScans: newScans
       }
   }
+  return oldState;
 }
 
 export default reducer;
