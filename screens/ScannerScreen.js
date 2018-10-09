@@ -30,7 +30,14 @@ class ScannerScreen extends Component {
 
   fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
-    console.log(this.props.settings)
+    console.log(JSON.stringify({
+      id: code.data,
+      maxCarbs: this.props.settings.maxCarbs,
+      maxCalories: this.props.settings.maxCalories,
+      organic: this.props.settings.organic,
+      vegan: this.props.settings.vegan,
+      glutenFree: this.props.settings.glutenFree
+    }))
     fetch(
       URL, 
       {
@@ -44,18 +51,21 @@ class ScannerScreen extends Component {
           maxCalories: this.props.settings.maxCalories,
           organic: this.props.settings.organic,
           vegan: this.props.settings.vegan,
-          glutenFree: this.props.settings.glutenFree,
+          glutenFree: this.props.settings.glutenFree
         })
       }
     ) 
     .then(response => {
+      console.log('Hi')
       response.json()
       .then(data => {
-        let status = data.status ? 'YES' : 'NO';
-        let newScans = [...this.state.currentScans];
-        newScans.splice(0, 1);
-        newScans.push({id: code.data, message: status});
-        this.setState({currentScans: newScans})
+        console.log('Bling')
+        console.log(data)
+        // let status = data.status ? 'YES' : 'NO';
+        // let newScans = [...this.state.currentScans];
+        // newScans.splice(0, 1);
+        // newScans.push({id: code.data, message: status});
+        // this.setState({currentScans: newScans})
       })
     })
     .catch(err => console.log(err));
