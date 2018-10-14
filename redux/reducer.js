@@ -2,7 +2,45 @@ const reducer = (oldState, action) => {
   if (action.type === 'CHANGE_SETTINGS') {
       return {
           ...oldState,
-          settings: action.settings
+          settings: action.settings,
+          oldScans: [
+            {
+              id: null,
+              allowed: null,
+              name: null,
+              brand: null,
+              imageURL: null,
+              carbs: null,
+              calories: null,
+              organic: null,
+              vegan: null,
+              glutenFree: null,
+            },
+            {
+              id: null,
+              allowed: null,
+              name: null,
+              brand: null,
+              imageURL: null,
+              carbs: null,
+              calories: null,
+              organic: null,
+              vegan: null,
+              glutenFree: null,
+            },
+            {
+              id: null,
+              allowed: null,
+              name: null,
+              brand: null,
+              imageURL: null,
+              carbs: null,
+              calories: null,
+              organic: null,
+              vegan: null,
+              glutenFree: null,
+            },
+          ]
       } 
   } else if (action.type === 'UPDATE_ITEM') {
       let newItem = {

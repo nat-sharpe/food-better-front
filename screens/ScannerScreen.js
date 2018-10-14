@@ -23,6 +23,22 @@ class ScannerScreen extends Component {
     });
   };
 
+  checkAllowed = data => {
+    let status = true;
+    if (this.props.oldScans[0].maxCarbs && this.props.oldScans[0].maxCarbs < data.carbs) {
+      status = false;
+    } else if (this.props.oldScans[0].maxCalories && this.props.oldScans[0].maxCalories < data.calories) {
+      status = false;
+    } else if ((this.props.oldScans[0].organic === true) && (data.organic === false)) {
+      status = false;
+    } else if ((this.props.oldScans[0].vegan === true) && (data.vegan === false)) {
+      status = false;
+    } else if ((this.props.oldScans[0].glutenFree === true) && (data.glutenFree === false)) {
+      status = false;
+    };
+    return status;
+  }
+
   fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
     console.log(JSON.stringify({
@@ -42,21 +58,22 @@ class ScannerScreen extends Component {
         },
         body: JSON.stringify({
           id: code.data,
-          maxCarbs: this.props.settings.maxCarbs,
-          maxCalories: this.props.settings.maxCalories,
-          organic: this.props.settings.organic,
-          vegan: this.props.settings.vegan,
-          glutenFree: this.props.settings.glutenFree
+          // maxCarbs: this.props.settings.maxCarbs,
+          // maxCalories: this.props.settings.maxCalories,
+          // organic: this.props.settings.organic,
+          // vegan: this.props.settings.vegan,
+          // glutenFree: this.props.settings.glutenFree
         })
       }
     ) 
     .then(response => {
       response.json()
       .then(data => {
+        let status = this.checkAllowed(data);
         this.props.dispatch({
           type: 'UPDATE_ITEM',
           id: data.id,
-          allowed: data.allowed,
+          allowed: status,
           name: data.name,
           brand: data.brand,
           imageURL: data.imageURL,
@@ -143,7 +160,7 @@ export default connect(mapStateToProps)(ScannerScreen)
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: '#222222'
+    backgroundColor: 'white'
   },
 
   scanner: {

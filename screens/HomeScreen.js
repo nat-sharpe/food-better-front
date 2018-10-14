@@ -60,7 +60,14 @@ export default class HomeScreen extends React.Component {
             <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
           </View>
         </View> */}
-        <Text>Home</Text>
+        <View style={styles.container}>
+          <Text style={styles.header}>FOOD BETTER</Text>
+        </View>
+        <Image source={require('../assets/images/home.png')} style={{height: 100, width: 100}}/>
+        <View style={styles.container}>
+          <Text style={styles.getStartedText}>Choose your filter</Text>
+          <Text style={styles.getStartedText}>and start scanning!</Text>
+        </View>
       </View>
     );
   }
@@ -103,6 +110,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   developmentModeText: {
     marginBottom: 20,
@@ -186,4 +195,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+  header: {
+    fontSize: 30,
+    color: 'green'
+  }
 });
