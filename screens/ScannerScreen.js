@@ -23,6 +23,22 @@ class ScannerScreen extends Component {
     });
   };
 
+  checkAllowed = item => {
+    let status = true;
+    if (this.props.settings.maxCarbs && this.props.settings.maxCarbs < item.carbs) {
+      status = false;
+    } else if (this.props.settings.maxCalories && this.props.settings.maxCalories < item.calories) {
+      status = false;
+    } else if ((this.props.settings.organic === true) && (item.organic === false)) {
+      status = false;
+    } else if ((this.props.settings.vegan === true) && (item.vegan === false)) {
+      status = false;
+    } else if ((this.props.settings.glutenFree === true) && (item.glutenFree === false)) {
+      status = false;
+    };
+    return status;
+  }
+
   fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
     console.log(JSON.stringify({
@@ -42,29 +58,30 @@ class ScannerScreen extends Component {
         },
         body: JSON.stringify({
           id: code.data,
-          maxCarbs: this.props.settings.maxCarbs,
-          maxCalories: this.props.settings.maxCalories,
-          organic: this.props.settings.organic,
-          vegan: this.props.settings.vegan,
-          glutenFree: this.props.settings.glutenFree
+          // maxCarbs: this.props.settings.maxCarbs,
+          // maxCalories: this.props.settings.maxCalories,
+          // organic: this.props.settings.organic,
+          // vegan: this.props.settings.vegan,
+          // glutenFree: this.props.settings.glutenFree
         })
       }
     ) 
     .then(response => {
       response.json()
-      .then(data => {
+      .then(item => {
+        let status = this.checkAllowed(item);
         this.props.dispatch({
           type: 'UPDATE_ITEM',
-          id: data.id,
-          allowed: data.allowed,
-          name: data.name,
-          brand: data.brand,
-          imageURL: data.imageURL,
-          carbs: data.carbs,
-          calories: data.calories,
-          organic: data.organic,
-          vegan: data.vegan,
-          glutenFree: data.glutenFree,
+          id: item.id,
+          allowed: status,
+          name: item.name,
+          brand: item.brand,
+          imageURL: item.imageURL,
+          carbs: item.carbs,
+          calories: item.calories,
+          organic: item.organic,
+          vegan: item.vegan,
+          glutenFree: item.glutenFree,
         });
       })
     })
@@ -143,7 +160,7 @@ export default connect(mapStateToProps)(ScannerScreen)
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: '#222222'
+    backgroundColor: 'white'
   },
 
   scanner: {
