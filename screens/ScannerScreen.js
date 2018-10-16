@@ -25,35 +25,19 @@ class ScannerScreen extends Component {
 
   checkAllowed = item => {
     let status = true;
-    console.log(this.props.settings.maxCarbs)
-    console.log(this.props.settings.maxCalories)
-    console.log(this.props.settings.glutenFree)
-    console.log(this.props.settings.vegan)
-    console.log(this.props.settings.organic)
 
     if (this.props.settings.maxCarbs && this.props.settings.maxCarbs < item.carbs) {
       status = false;
-      console.log('carb')
-      console.log(status)
     } else if (this.props.settings.maxCalories && this.props.settings.maxCalories < item.calories) {
       status = false;
-      console.log('cal')
-      console.log(status)
     } else if ((this.props.settings.organic === true) && (item.organic === "false")) {
       status = false;
-      console.log('organic')
-      console.log(status)
     } else if ((this.props.settings.vegan === true) && (item.vegan === "false")) {
       status = false;
-      console.log('vegan')
-      console.log(status)
     } else if ((this.props.settings.glutenFree === true) && (item.glutenFree === "false")) {
       status = false;
-      console.log('gluten')
-      console.log(status)
     };
-    console.log('yello')
-    console.log(status)
+    
     this.props.dispatch({
       type: 'UPDATE_ITEM',
       id: item.id,
@@ -71,14 +55,6 @@ class ScannerScreen extends Component {
 
   fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
-    // console.log(JSON.stringify({
-    //   id: code.data,
-    //   maxCarbs: this.props.settings.maxCarbs,
-    //   maxCalories: this.props.settings.maxCalories,
-    //   organic: this.props.settings.organic,
-    //   vegan: this.props.settings.vegan,
-    //   glutenFree: this.props.settings.glutenFree
-    // }))
     fetch(
       URL, 
       {
@@ -132,7 +108,6 @@ class ScannerScreen extends Component {
   render() {
     return (
       <View style={styles.main}>
-        {/* <Text style={styles.myText}>Food Better</Text> */}
         <View style={styles.scanner}>
           {this.state.hasCameraPermission === null ?
             <Text>Requesting for camera permission</Text> :

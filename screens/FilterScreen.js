@@ -47,8 +47,10 @@ const formStyles = {
 const options = {
   fields: {
     maxCarbs: {
+      label: 'Max. carbs per serving',
     },
     maxCalories: {
+      label: 'Max. calories per serving',
     },
     organic: {
       label: 'Organic',
@@ -61,6 +63,10 @@ const options = {
     },
   },
   stylesheet: formStyles,
+  i18n: {
+    optional: '',
+    required: ''
+  }
 };
 
 class FilterScreen extends React.Component {
@@ -78,7 +84,6 @@ class FilterScreen extends React.Component {
 
   handleSubmit = () => {
     const value = this._form.getValue();
-    console.log(this.props)
     this.props.dispatch({
       type: 'CHANGE_SETTINGS',
       settings: value
@@ -89,14 +94,10 @@ class FilterScreen extends React.Component {
     return (
       <DismissKeyboard>
         <View style={styles.container}>
-          <Form 
+          <Form onChange={this.handleSubmit}
             ref={component => this._form = component}
             type={Settings} 
             options={options}
-          />
-          <Button
-            title="Save"
-            onPress={this.handleSubmit}
           />
         </View>
       </DismissKeyboard>
@@ -108,8 +109,9 @@ export default connect()(FilterScreen)
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff'
   },
 });
