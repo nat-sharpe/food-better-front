@@ -30,9 +30,9 @@ const formStyles = {
   controlLabel: {
     normal: {
       color: 'black',
-      fontSize: 16,
+      fontSize: 15,
       marginBottom: 7,
-      fontWeight: '500'
+      fontWeight: '500',
     },
     // the style applied when a validation error occours
     error: {
@@ -70,17 +70,6 @@ const options = {
 };
 
 class FilterScreen extends React.Component {
-
-  constructor(props) {
-      super(props);
-      this.state = {
-          maxCalories: 0,
-          maxCarbs: 0,
-          organic: false,
-          vegan: false,
-          glutenFree: false
-      };
-    }
 
   handleSubmit = () => {
     const value = this._form.getValue();

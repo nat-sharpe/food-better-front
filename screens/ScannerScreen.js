@@ -37,7 +37,7 @@ class ScannerScreen extends Component {
     } else if ((this.props.settings.glutenFree === true) && (item.glutenFree === "false")) {
       status = false;
     };
-    
+
     this.props.dispatch({
       type: 'UPDATE_ITEM',
       id: item.id,
@@ -77,12 +77,14 @@ class ScannerScreen extends Component {
   };
 
   handleBarCodeRead = code => {
+    console.log('code data' + code.data)
+    console.log(this.props.oldScans[2].id !== code.data)
     if (this.props.oldScans[2].id !== code.data) {
       this.fetchItemData(code)
     };
   }
 
-  buildButtons = (item) => {
+  buildMainButton = item => {
     let no = require('../assets/images/no.png');
     let yes = require('../assets/images/yes.png');
     let status = item.allowed ? yes : no;
@@ -91,16 +93,39 @@ class ScannerScreen extends Component {
           <View style={styles.button}>
             <Image
               source={status}
-              style={{height: 50, width: 50}}
+              style={{height: 60, width: 60, marginRight: 10, marginLeft: 10}}
             />
             <Image
               source={{uri: item.imageURL}}
-              style={{height: 50, width: 30}}
+              style={{height: 80, width: 45, marginRight: 10}}
             />
             <Text style={styles.text1}>
               {`${item.brand} ${item.name}`}
             </Text>
           </View>
+      )
+    }
+  }
+
+  buildButtons = item => {
+    let no = require('../assets/images/no.png');
+    let yes = require('../assets/images/yes.png');
+    let status = item.allowed ? yes : no;
+    if (item.id) {
+      return (
+        <View style={styles.button}>
+          <Image
+            source={status}
+            style={{height: 40, width: 40, marginRight: 10, marginLeft: 15}}
+          />
+          <Image
+            source={{uri: item.imageURL}}
+            style={{height: 50, width: 30, marginRight: 10}}
+          />
+          <Text style={styles.text1}>
+            {`${item.brand} ${item.name}`}
+          </Text>
+        </View>
       )
     }
   }
@@ -121,7 +146,7 @@ class ScannerScreen extends Component {
         </View>
         <View style={styles.container}>
           <TouchableOpacity style={styles.v1}>
-            {this.buildButtons(this.props.oldScans[2])}
+            {this.buildMainButton(this.props.oldScans[2])}
          </TouchableOpacity>
           <TouchableOpacity style={styles.v1}>
             {this.buildButtons(this.props.oldScans[1])}
@@ -152,7 +177,8 @@ const styles = StyleSheet.create({
 
   scanner: {
     height: 200, 
-    width: Dimensions.get('window').width
+    width: Dimensions.get('window').width,
+    marginBottom: 15
   },
   myText: {
     color: 'white',
@@ -162,11 +188,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'column',
-    height: 250
+    height: 240,
   },
   button: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: Dimensions.get('window').width,
+    paddingRight: 20,
   },
   v1: {
     flex: 1,
@@ -180,7 +210,8 @@ const styles = StyleSheet.create({
   text1: {
     fontSize: 15,
     color: 'black',
-    width: 200
+    width: 200,
+    paddingRight: 10
   },
   preview: {
     flex: 1,
