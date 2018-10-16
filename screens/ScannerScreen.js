@@ -25,30 +25,60 @@ class ScannerScreen extends Component {
 
   checkAllowed = item => {
     let status = true;
+    console.log(this.props.settings.maxCarbs)
+    console.log(this.props.settings.maxCalories)
+    console.log(this.props.settings.glutenFree)
+    console.log(this.props.settings.vegan)
+    console.log(this.props.settings.organic)
+
     if (this.props.settings.maxCarbs && this.props.settings.maxCarbs < item.carbs) {
       status = false;
+      console.log('carb')
+      console.log(status)
     } else if (this.props.settings.maxCalories && this.props.settings.maxCalories < item.calories) {
       status = false;
-    } else if ((this.props.settings.organic === true) && (item.organic === false)) {
+      console.log('cal')
+      console.log(status)
+    } else if ((this.props.settings.organic === true) && (item.organic === "false")) {
       status = false;
-    } else if ((this.props.settings.vegan === true) && (item.vegan === false)) {
+      console.log('organic')
+      console.log(status)
+    } else if ((this.props.settings.vegan === true) && (item.vegan === "false")) {
       status = false;
-    } else if ((this.props.settings.glutenFree === true) && (item.glutenFree === false)) {
+      console.log('vegan')
+      console.log(status)
+    } else if ((this.props.settings.glutenFree === true) && (item.glutenFree === "false")) {
       status = false;
+      console.log('gluten')
+      console.log(status)
     };
-    return status;
+    console.log('yello')
+    console.log(status)
+    this.props.dispatch({
+      type: 'UPDATE_ITEM',
+      id: item.id,
+      allowed: status,
+      name: item.title,
+      brand: item.brand,
+      imageURL: item.imageurl,
+      carbs: item.carbs,
+      calories: item.calories,
+      organic: item.organic,
+      vegan: item.vegan,
+      glutenFree: item.glutenfree,
+    });
   }
 
   fetchItemData = code => {
     const URL = 'http://foodbetter.fun:3000/scan';
-    console.log(JSON.stringify({
-      id: code.data,
-      maxCarbs: this.props.settings.maxCarbs,
-      maxCalories: this.props.settings.maxCalories,
-      organic: this.props.settings.organic,
-      vegan: this.props.settings.vegan,
-      glutenFree: this.props.settings.glutenFree
-    }))
+    // console.log(JSON.stringify({
+    //   id: code.data,
+    //   maxCarbs: this.props.settings.maxCarbs,
+    //   maxCalories: this.props.settings.maxCalories,
+    //   organic: this.props.settings.organic,
+    //   vegan: this.props.settings.vegan,
+    //   glutenFree: this.props.settings.glutenFree
+    // }))
     fetch(
       URL, 
       {
@@ -57,32 +87,14 @@ class ScannerScreen extends Component {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          id: code.data,
-          // maxCarbs: this.props.settings.maxCarbs,
-          // maxCalories: this.props.settings.maxCalories,
-          // organic: this.props.settings.organic,
-          // vegan: this.props.settings.vegan,
-          // glutenFree: this.props.settings.glutenFree
+          id: code.data
         })
       }
     ) 
     .then(response => {
       response.json()
       .then(item => {
-        let status = this.checkAllowed(item);
-        this.props.dispatch({
-          type: 'UPDATE_ITEM',
-          id: item.id,
-          allowed: status,
-          name: item.name,
-          brand: item.brand,
-          imageURL: item.imageURL,
-          carbs: item.carbs,
-          calories: item.calories,
-          organic: item.organic,
-          vegan: item.vegan,
-          glutenFree: item.glutenFree,
-        });
+        this.checkAllowed(item);
       })
     })
     .catch(err => console.log(err));
