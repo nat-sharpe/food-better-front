@@ -23,17 +23,17 @@ class ScannerScreen extends Component {
     });
   };
 
-  checkAllowed = data => {
+  checkAllowed = item => {
     let status = true;
-    if (this.props.oldScans[0].maxCarbs && this.props.oldScans[0].maxCarbs < data.carbs) {
+    if (this.props.settings.maxCarbs && this.props.settings.maxCarbs < item.carbs) {
       status = false;
-    } else if (this.props.oldScans[0].maxCalories && this.props.oldScans[0].maxCalories < data.calories) {
+    } else if (this.props.settings.maxCalories && this.props.settings.maxCalories < item.calories) {
       status = false;
-    } else if ((this.props.oldScans[0].organic === true) && (data.organic === false)) {
+    } else if ((this.props.settings.organic === true) && (item.organic === false)) {
       status = false;
-    } else if ((this.props.oldScans[0].vegan === true) && (data.vegan === false)) {
+    } else if ((this.props.settings.vegan === true) && (item.vegan === false)) {
       status = false;
-    } else if ((this.props.oldScans[0].glutenFree === true) && (data.glutenFree === false)) {
+    } else if ((this.props.settings.glutenFree === true) && (item.glutenFree === false)) {
       status = false;
     };
     return status;
@@ -68,20 +68,20 @@ class ScannerScreen extends Component {
     ) 
     .then(response => {
       response.json()
-      .then(data => {
-        let status = this.checkAllowed(data);
+      .then(item => {
+        let status = this.checkAllowed(item);
         this.props.dispatch({
           type: 'UPDATE_ITEM',
-          id: data.id,
+          id: item.id,
           allowed: status,
-          name: data.name,
-          brand: data.brand,
-          imageURL: data.imageURL,
-          carbs: data.carbs,
-          calories: data.calories,
-          organic: data.organic,
-          vegan: data.vegan,
-          glutenFree: data.glutenFree,
+          name: item.name,
+          brand: item.brand,
+          imageURL: item.imageURL,
+          carbs: item.carbs,
+          calories: item.calories,
+          organic: item.organic,
+          vegan: item.vegan,
+          glutenFree: item.glutenFree,
         });
       })
     })
