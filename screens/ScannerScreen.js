@@ -77,12 +77,12 @@ class ScannerScreen extends Component {
   };
 
   handleBarCodeRead = code => {
-    console.log('code data' + code.data)
-    console.log(this.props.oldScans[2].id !== code.data)
-    if (this.props.oldScans[2].id !== code.data) {
-      this.fetchItemData(code)
+    if (this.props.oldScans[2].id === null) {
+      this.fetchItemData(code);
+    } else if (this.props.oldScans[2].id != code.data)  {
+      this.fetchItemData(code);
     };
-  }
+  };
 
   buildMainButton = item => {
     let no = require('../assets/images/no.png');
@@ -97,7 +97,7 @@ class ScannerScreen extends Component {
             />
             <Image
               source={{uri: item.imageURL}}
-              style={{height: 80, width: 45, marginRight: 10}}
+              style={{height: 90, width: 50, marginRight: 10}}
             />
             <Text style={styles.text1}>
               {`${item.brand} ${item.name}`}

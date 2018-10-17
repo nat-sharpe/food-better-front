@@ -58,7 +58,6 @@ const reducer = (oldState, action) => {
       let newScans = [...oldState.oldScans];
       newScans.splice(0, 1);
       newScans.push(newItem);
-      console.log(newScans)
       return {
           ...oldState,
           oldScans: newScans
